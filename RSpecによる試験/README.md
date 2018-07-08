@@ -173,11 +173,15 @@ RSpec.describe 'users/sessions/new.html.haml', type: :view do
 
   subject { render ; rendered }
 
+  it { is_expected.to have_title I18n.t('.title') }
+ 
   it { is_expected.to have_css '#login_form' }
   it { is_expected.to have_css :h1, text: I18n.t('app_name') }
   it { is_expected.to have_css :p, text: I18n.t('users.sessions.new.app_description') }
 
 ```
+
+特にtitleタグのについては漏れがちなので、忘れずに各ページ毎に確認する
 
 #### パーツが意図した属性を付加された形で描画されているか
 
@@ -200,6 +204,40 @@ RSpec.describe 'users/sessions/new.html.haml', type: :view do
 
   # render partial: '/layouts/alerts'
   it { is_expected.to have_css '#login_form', text: 'ALERTS_CONTENTS' }
+```
+
+#### layout内に複数のyieldが存在している場合
+
+header等に要素を埋め込む記述がある場合はそれも確認する
+
+```
+require 'rails_helper'
+  
+RSpec.describe 'layouts/my.html.haml', type: :view do
+  let(:grid_system_layout) {
+    <<~"EOT"
+      !!!
+      %html
+        %head
+          %title
+            GRID_SYSTEM_LAYOUT
+          = yield :stylesheet_links
+          = yield :javascript_links
+        %body
+          = content_for?(:application_content) ? yield(:application_content) : yield
+    EOT
+  }
+  before do
+    stub_template 'layouts/grid_system.html.haml' => grid_system_layout
+  end
+  subject { render; rendered }
+
+  ### 中略 ###
+
+  it { is_expected.to have_css 'head link[rel="stylesheet"][media="screen"][href^="/packs-test/my-"]', visible: false }
+  it { is_expected.to have_css 'head script[src^="/packs-test/my-"]', visible: false }
+
+end
 ```
 
 #### インスタンス変数やヘルパーの関数
