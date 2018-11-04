@@ -1,0 +1,103 @@
+AllCops:
+  TargetRubyVersion: 2.5
+
+Layout/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Layout/ExtraSpacing:
+  Exclude:
+    - '*.gemspec'
+
+Layout/LeadingBlankLines:
+  Exclude:
+    - '*.gemspec'
+
+Layout/SpaceAroundOperators:
+  Exclude:
+    - '*.gemspec'
+
+Layout/SpaceBeforeBlockBraces:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Layout/SpaceBeforeSemicolon:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Layout/SpaceInsideBlockBraces:
+  Exclude:
+    - 'spec/**/*.rb'
+
+
+Lint/InterpolationCheck:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+
+Metrics/BlockLength:
+  Exclude:
+    - '*.gemspec'
+    - 'spec/**/*.rb'
+
+Metrics/LineLength:
+  Exclude:
+    - '*.gemspec'
+    - 'spec/**/*.rb'
+  #Max: 120
+
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/BlockComments:
+  Exclude:
+    - 'spec/spec_helper.rb'
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/DocumentationMethod:
+  Enabled: true
+
+Style/ExpandPathArguments:
+  Exclude:
+    - '*.gemspec'
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'Gemfile'
+    - 'Rakefile'
+    - '*.gemspec'
+    - 'bin/*'
+    - 'spec/**/*_spec.rb'
+
+Style/GlobalVars:
+  Exclude:
+    - 'exe/*'
+
+Style/Semicolon:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Style/SymbolProc:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Style/StringLiterals:
+  Exclude:
+    - '*.gemspec'
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'bin/*'
+    - 'lib/*/version.rb'
+    - 'spec/spec_helper.rb'

@@ -1,0 +1,220 @@
+AllCops:
+  TargetRubyVersion: 2.5
+
+Bundler/OrderedGems:
+  Exclude:
+    - 'Gemfile'
+
+Layout/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Layout/AlignParameters:
+  Exclude:
+    - 'bin/*'
+
+Layout/EmptyLines:
+  Exclude:
+    - 'config/initializers/**/*.rb'
+    - 'lib/tasks/cucumber.rake'
+
+Layout/EmptyLineAfterMagicComment:
+  Exclude:
+    - 'config/initializers/**/*.rb'
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Layout/IndentationWidth:
+  Exclude:
+    - 'lib/tasks/cucumber.rake'
+
+Layout/SpaceBeforeBlockBraces:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Layout/SpaceBeforeSemicolon:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Exclude:
+    - 'config/environments/production.rb'
+
+Layout/SpaceInsideBlockBraces:
+  Exclude:
+    - 'lib/tasks/**/*.rake'
+    - 'spec/**/*_spec.rb'
+
+Layout/SpaceInsideHashLiteralBraces:
+  Exclude:
+    - 'lib/tasks/**/*.rake'
+
+
+Lint/HandleExceptions:
+  Exclude:
+    - 'lib/tasks/**/*.rake'
+    - 'Rakefile'
+
+Lint/InterpolationCheck:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Layout/LeadingCommentSpace:
+  Exclude:
+    - 'config/initializers/content_security_policy.rb'
+
+Lint/UnusedBlockArgument:
+  Exclude:
+    - 'config/initializers/simple_form_bootstrap.rb'
+    - 'features/**/*_steps.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'db/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'config/initializers/**/*.rb'
+    - 'db/**/*'
+    - 'lib/tasks/**/*.rake'
+    - 'spec/**/*.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'config/initializers/**/*.rb'
+    - 'db/**/*'
+
+Metrics/LineLength:
+  Exclude:
+    - 'config/application.rb'
+    - 'config/environments/*'
+    - 'config/puma.rb'
+    - 'config/initializers/**/*.rb'
+    - 'db/**/*'
+    - 'features/**/*_steps.rb'
+    - 'features/support/env.rb'
+    - 'Gemfile'
+    - 'lib/tasks/**/*.rake'
+    - 'Rakefile'
+    - 'script/cucumber'
+    - 'spec/**/*.rb'
+  #Max: 120
+
+Naming/FileName:
+  Exclude:
+    - 'features/support/**/*.rb'
+    - 'spec/support/**/*.rb'
+
+Rails/CreateTableWithTimestamps:
+  Exclude:
+    - 'db/**/*'
+
+Rails/FilePath:
+  Exclude:
+    - 'lib/tasks/cucumber.rake'
+    - 'spec/rails_helper.rb'
+
+Security/Eval:
+  Exclude:
+    - 'features/step_definitions/**/*_steps.rb'
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/BlockComments:
+  Exclude:
+    - 'spec/spec_helper.rb'
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Exclude:
+    - 'app/controllers/application_controller.rb'
+    - 'app/helpers/application_helper.rb'
+    - 'app/mailers/application_mailer.rb'
+    - 'app/models/application_record.rb'
+    - 'config/application.rb'
+    - 'db/**/*'
+
+Style/DocumentationMethod:
+  Enabled: true
+  Exclude:
+    - 'db/**/*'
+
+Style/ExpandPathArguments:
+  Exclude:
+    - 'bin/*'
+    - 'spec/rails_helper.rb'
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'app/channels/application_cable/connection.rb'
+    - 'app/channels/application_cable/channel.rb'
+    - 'app/controllers/application_controller.rb'
+    - 'app/helpers/application_helper.rb'
+    - 'app/jobs/application_job.rb'
+    - 'app/mailers/application_mailer.rb'
+    - 'app/models/application_record.rb'
+    - 'bin/*'
+    - 'config/**/*'
+    - 'config.ru'
+    - 'db/**/*'
+    - 'features/support/env.rb'
+    - 'Gemfile'
+    - 'lib/tasks/**/*.rake'
+    - 'Rakefile'
+    - 'script/cucumber'
+    - 'spec/**/*.rb'
+
+Style/Lambda:
+  Exclude:
+    - 'config/initializers/simple_form_bootstrap.rb'
+
+Style/MixinUsage:
+  Exclude:
+    - 'bin/*'
+
+Style/NumericLiterals:
+  Exclude:
+    - 'db/schema.rb'
+
+Style/PercentLiteralDelimiters:
+  Exclude:
+    - 'lib/tasks/cucumber.rake'
+
+Style/Semicolon:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Style/StderrPuts:
+  Exclude:
+    - 'bin/*'
+
+Style/StringLiterals:
+  Exclude:
+    - 'bin/*'
+    - 'config/environments/*'
+    - 'config/application.rb'
+    - 'config/puma.rb'
+    - 'db/**/*'
+    - 'lib/tasks/**/*.rake'
+    - 'spec/**/*.rb'
+    - 'features/support/*.rb'
+
+Style/SymbolArray:
+  Exclude:
+    - 'Gemfile'
+    - 'lib/tasks/**/*.rake'
+
+Style/RedundantBegin:
+  Exclude:
+    - 'bin/*'
+
