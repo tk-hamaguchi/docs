@@ -1,0 +1,105 @@
+AllCops:
+  TargetRubyVersion: 2.5
+  Exclude:
+    - 'bin/*'
+    - 'config/initializers/**/*.rb'
+    - 'db/**/*'
+    - 'features/**/*_steps.rb'
+    - 'Gemfile'
+    - 'lib/tasks/cucumber.rake'
+    - 'Rakefile'
+    - 'script/*'
+    - 'spec/**/*.rb'
+
+Layout/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Layout/SpaceBeforeBlockBraces:
+  Exclude:
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Exclude:
+    - 'config/environments/production.rb'
+
+Layout/SpaceInsideBlockBraces:
+  Exclude:
+    - 'lib/tasks/**/*.rake'
+    - 'spec/**/*_spec.rb'
+
+Layout/SpaceInsideHashLiteralBraces:
+  Exclude:
+    - 'lib/tasks/**/*.rake'
+
+Lint/HandleExceptions:
+  Exclude:
+    - 'lib/tasks/**/*.rake'
+
+# http://hikitest.hatenablog.com/entry/2015/01/14/034346
+Metrics/AbcSize:
+  Max: 30
+
+Metrics/BlockLength:
+  Exclude:
+    - 'lib/tasks/**/*.rake'
+
+Metrics/LineLength:
+  Exclude:
+    - 'config/application.rb'
+    - 'config/environments/*'
+    - 'config/puma.rb'
+    - 'lib/tasks/**/*.rake'
+  Max: 120
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/CyclomaticComplexity:
+  Max: 20
+
+Style/Documentation:
+  Exclude:
+    - 'app/controllers/application_controller.rb'
+    - 'app/helpers/application_helper.rb'
+    - 'app/mailers/application_mailer.rb'
+    - 'app/models/application_record.rb'
+    - 'config/application.rb'
+
+Style/DocumentationMethod:
+  Enabled: true
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'app/channels/application_cable/connection.rb'
+    - 'app/channels/application_cable/channel.rb'
+    - 'app/controllers/application_controller.rb'
+    - 'app/helpers/application_helper.rb'
+    - 'app/jobs/application_job.rb'
+    - 'app/mailers/application_mailer.rb'
+    - 'app/models/application_record.rb'
+    - 'config/**/*'
+    - 'config.ru'
+    - 'lib/tasks/**/*.rake'
+
+Style/StringLiterals:
+  Exclude:
+    - 'config/environments/*'
+    - 'config/application.rb'
+    - 'config/puma.rb'
+    - 'lib/tasks/**/*.rake'
+
+Style/SymbolArray:
+  Exclude:
+    - 'lib/tasks/**/*.rake'
