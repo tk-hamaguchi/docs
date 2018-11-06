@@ -51,6 +51,10 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Exclude:
     - 'lib/tasks/**/*.rake'
+  Max: 50
+
+Metrics/ClassLength:
+  Max: 150
 
 Metrics/LineLength:
   Exclude:
@@ -59,6 +63,12 @@ Metrics/LineLength:
     - 'config/puma.rb'
     - 'lib/tasks/**/*.rake'
   Max: 120
+
+Metrics/MethodLength:
+  Max: 50
+
+Metrics/ModuleLength:
+  Max: 150
 
 Style/AsciiComments:
   Enabled: false
