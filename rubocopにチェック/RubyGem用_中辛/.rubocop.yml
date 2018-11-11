@@ -68,6 +68,8 @@ Style/ClassAndModuleChildren:
 
 Style/DocumentationMethod:
   Enabled: true
+  Exclude:
+    - 'db/**/*'
 
 Style/ExpandPathArguments:
   Exclude:

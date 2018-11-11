@@ -41,7 +41,7 @@ Layout/SpaceBeforeBlockBraces:
 
 Layout/SpaceBeforeSemicolon:
   Exclude:
-    - 'spec/**/*_spec.rb'
+    - 'spec/**/*.rb'
 
 Layout/SpaceInsideArrayLiteralBrackets:
   Exclude:
@@ -78,6 +78,7 @@ Lint/UnusedBlockArgument:
 Metrics/AbcSize:
   Exclude:
     - 'db/**/*'
+  Max: 20
 
 Metrics/BlockLength:
   Exclude:
@@ -192,7 +193,7 @@ Style/PercentLiteralDelimiters:
 
 Style/Semicolon:
   Exclude:
-    - 'spec/**/*_spec.rb'
+    - 'spec/**/*.rb'
 
 Style/StderrPuts:
   Exclude:
