@@ -1,0 +1,136 @@
+AllCops:
+  TargetRubyVersion: 2.5
+
+Layout/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Layout/SpaceBeforeBlockBraces:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Layout/SpaceBeforeSemicolon:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Layout/SpaceInsideBlockBraces:
+  Exclude:
+    - 'lib/tasks/**/*.rake'
+    - 'spec/**/*_spec.rb'
+
+Lint/InterpolationCheck:
+  Exclude:
+    - 'spec/**/*'
+    - 'features/**/*'
+
+Lint/UnusedBlockArgument:
+  Exclude:
+    - 'features/**/*_steps.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'db/**/*'
+  Max: 20
+
+Metrics/BlockLength:
+  Exclude:
+    - 'config/initializers/**/*.rb'
+    - 'db/**/*'
+    - 'lib/tasks/**/*.rake'
+    - 'spec/**/*.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'db/**/*'
+
+Metrics/LineLength:
+  Exclude:
+    - 'db/**/*'
+    - 'features/**/*'
+    - 'Gemfile'
+    - 'lib/tasks/**/*.rake'
+    - 'Rakefile'
+    - 'script/cucumber'
+    - 'spec/**/*'
+  Max: 120
+
+Naming/FileName:
+  Exclude:
+    - 'features/support/**/*.rb'
+    - 'spec/support/**/*.rb'
+
+Rails/CreateTableWithTimestamps:
+  Exclude:
+    - 'db/**/*'
+
+Security/Eval:
+  Exclude:
+    - 'features/step_definitions/**/*_steps.rb'
+    - 'spec/**/*'
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Exclude:
+    - 'db/**/*'
+
+Style/DocumentationMethod:
+  Enabled: true
+  Exclude:
+    - 'db/**/*'
+    - 'bin/**/*'
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'bin/*'
+    - 'config/**/*'
+    - 'config.ru'
+    - 'db/**/*'
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'script/**/*'
+
+Style/MixinUsage:
+  Exclude:
+    - 'bin/*'
+
+Style/NumericLiterals:
+  Exclude:
+    - 'db/schema.rb'
+
+Style/Semicolon:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Style/StderrPuts:
+  Exclude:
+    - 'bin/*'
+
+Style/StringLiterals:
+  Exclude:
+    - 'bin/*'
+    - 'db/**/*'
+    - 'lib/tasks/**/*.rake'
+    - 'spec/**/*.rb'
+    - 'features/support/*.rb'
+
+Style/RedundantBegin:
+  Exclude:
+    - 'bin/*'
+
+Style/WordArray:
+  Exclude:
+    - 'db/schema.rb'
