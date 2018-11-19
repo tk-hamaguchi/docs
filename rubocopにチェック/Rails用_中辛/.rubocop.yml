@@ -1,3 +1,5 @@
+require: rubocop-rspec
+
 AllCops:
   TargetRubyVersion: 2.5
 
@@ -224,3 +226,25 @@ Style/RedundantBegin:
 Style/WordArray:
   Exclude:
     - 'db/schema.rb'
+
+
+RSpec/NestedGroups:
+  Enabled : false
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/ExampleWording:
+  Enabled: false
+
+RSpec/MessageChain:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 10
