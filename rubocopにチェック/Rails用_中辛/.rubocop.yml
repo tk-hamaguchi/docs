@@ -2,6 +2,9 @@ require: rubocop-rspec
 
 AllCops:
   TargetRubyVersion: 2.5
+  Exclude:
+    - 'vendor/bundle/**/*'
+    - 'node_modules/**/*'
 
 Bundler/OrderedGems:
   Exclude:
@@ -85,6 +88,7 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Exclude:
     - 'config/initializers/**/*.rb'
+    - 'config/environments/**/*.rb'
     - 'db/**/*'
     - 'lib/tasks/**/*.rake'
     - 'spec/**/*.rb'

@@ -10,6 +10,9 @@ AllCops:
     - 'Rakefile'
     - 'script/*'
     - 'spec/**/*.rb'
+    - 'vendor/bundle/**/*'
+    - 'node_modules/**/*'
+
 
 Layout/AlignHash:
   EnforcedHashRocketStyle: table
@@ -50,6 +53,7 @@ Metrics/AbcSize:
 
 Metrics/BlockLength:
   Exclude:
+    - 'config/environments/**/*.rb'
     - 'lib/tasks/**/*.rake'
   Max: 50
 
