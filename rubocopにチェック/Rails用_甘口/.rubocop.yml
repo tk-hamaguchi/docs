@@ -53,6 +53,7 @@ Metrics/AbcSize:
 
 Metrics/BlockLength:
   Exclude:
+    - 'config/routes.rb'
     - 'config/environments/**/*.rb'
     - 'lib/tasks/**/*.rake'
   Max: 50
