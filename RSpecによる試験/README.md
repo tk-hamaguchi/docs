@@ -19,120 +19,160 @@ Modelに対して必要なバリデータが設定されているか、必要な
 
 ### Controller Spec
 
-Controllerの各アクションメソッド呼び出しに対して、インスタンス変数やレスポンス、flashが意図したものになっているか確認するための試験を記述する。
+Controllerに対するユニットテストを記述する。
+各アクションメソッドやStrong Parameter化するメソッドを試験する。
+認証等`before_action`で実行しているものや、ControllerConcernでモジュール化されたものはstub化して試験を進めるものとし、確認ポイントはインスタンス変数やレスポンス、flashが意図したものになっているか、意図したエラーがraiseされているかなどとなる。
 
-各アクションメソッドについてはパラメータの正誤とアクター毎にcontextを切って行う
 
-```
-RSpec.describe MyController, type: :controller do
+#### 各アクションメソッドのテスト
 
-  context '#update' do
-    subject { put :update }
-    let(:user_params) { double(ActionController::Parameters) }
-
-    context 'with valid params' do
-      before { allow(controller).to receive(:user_params).and_return(user_params) }
-      context 'by confirmed_user' do
-        let(:user) { FactoryBot.create :confirmed_user }
-        let(:update_result) { true }
-        before do
-          allow(controller).to receive(:current_user).and_return(user)
-          allow(user).to receive(:update).and_return(update_result)
-          sign_in user
-        end
-        ### 中略 ###
-      end
-      context 'by unknown_user' do
-        ### 中略 ###
-      end
-    end
-
-    context 'with invalid params' do
-      context 'by confirmed_user' do
-        let(:user) { FactoryBot.create :confirmed_user }
-        let(:update_result) { true }
-        before do
-          allow(controller).to receive(:user_params).and_raise(ActionController::ParameterMissing.new({}))
-          sign_in user
-        end
-        ### 中略 ###
-      end
-    end
-
-    context 'with invalid user_params' do
-      context 'by confirmed_user' do
-        let(:user) { FactoryBot.create :confirmed_user }
-        let(:update_result) { false }
-        before do
-          allow(controller).to receive(:user_params).and_return(user_params)
-          allow(controller).to receive(:current_user).and_return(user)
-          allow(user).to receive(:update).and_return(update_result)
-          sign_in user
-        end
-        ### 中略 ###
-      end
-    end
-
-  end
-```
-
-subjectとしては各アクションに対して下記の３パターンの確認を記述し、加えてStrongParameterの処理等、アクションメソッド以外の確認についても記述する。
+各アクションに対して下記の5パターンに対する確認を記述する。
 
 * レスポンスオブジェクト
 * flashオブジェクト
 * 各アクションが影響するインスタンス変数
+* モデルや他のモジュールに対する呼び出し
+* StrongParameterを使う場合のエラーケース
 
-記述する際には下記のポイントをスタブ化する
+テストを記述する際には下記のポイントをスタブ化する。
 
-* アクションメソッドが呼び出している各メソッド
-* モデルを含む外部モジュールのメソッド呼び出し
+* アクションメソッドがStrongParameterを呼び出している場合はそのStrongParameter化処理
+* 認証やモデルを含む外部モジュールのメソッド呼び出し
 
+他のモジュールで`rescue_from`を行っている可能性を考慮し、`bypass_rescue`を必須とする。
 
-
-#### レスポンスオブジェクトの確認ポイント
-
-* renderで終了するアクション（暗黙のrenderも含む）ではレスポンスステータスと、renderするview
-* redirect_toで終了するアクションはリダイレクト先のパス
-
-```
-context '#top' do
-  subject { get :top }
-  context 'by confirmed_user' do
-    context 'response' do
-      subject { super(); response }
-      before { sign_in FactoryBot.create :confirmed_user }
-      it { is_expected.to have_http_status :ok }
-    end
+```ruby
+#(前略)
+RSpec.describe My::DomainsController, type: :controller do
+  before do
+    # rescue_fromの無効化
+    bypass_rescue
+    
+    # 認証やモデルを含む外部モジュールのメソッド呼び出しのスタブ化
+    allow(controller).to receive(:authenticate_user!).and_return(true)
   end
-  context 'by unknown user' do
-    context 'response' do
-      it { is_expected.to redirect_to new_user_session_path }
+
+  context '#create' do
+    subject { post :create, params: params }
+
+    before do
+      # アクションメソッドが呼び出しているStrongParameterのスタブ化
+      allow(controller).to receive(:domain_params).and_return(domain_params)
+      # 認証やモデルを含む外部モジュールのメソッド呼び出しのスタブ化
+      allow(Domain).to receive(:new).and_return(domain)
     end
+
+    let(:params) { {} }
+    let(:domain_params) { instance_double(ActionController::Parameters) }
+    let(:domain) { instance_double(Domain, id: 123, save!: true) }
+
+    context 'with valid params' do
+      context 'response' do
+#(後略)
+```
+
+
+##### レスポンスオブジェクトの確認
+
+レスポンスが返る場合は下記の確認ポイントを確認する
+
+* renderで終了するアクション（暗黙のrenderも含む）ではレスポンスステータスと、renderするviewを確認する
+* redirect_toで終了するアクションはリダイレクト先のパスを確認する
+
+```ruby
+#(前略)
+context 'with valid params' do
+  context 'response' do
+    subject { super() ; response }
+
+    it { is_expected.to have_http_status :ok }
+    it { is_expected.to render_template 'my/domains/show' }
+    it { is_expected.to render_template 'layouts/my' }
   end
-end
+#(後略)
+```
+```ruby
+#(前略)
+context 'with valid params' do
+  context 'response' do
+    subject { super() ; response }
+
+    it { is_expected.to have_http_status :found }
+    it { is_expected.to redirect_to my_domains_path }
+        end
+#(後略)
 ```
 
-#### flashオブジェクトの確認ポイント
 
-* alertやnoticeに含まれている文字列
+##### flashオブジェクトの確認
 
-```
+WebUIを提供している場合はflashオブジェクトについても下記を必ず確認する
+
+* alertやnoticeに含まれている文字列が落としたものになっているか確認する
+
+```ruby
+#(前略)
 context 'flash[:alert]' do
   subject { super(); flash[:alert] }
+
   it { is_expected.to eq I18n.t('devise.failure.unauthenticated') }
 end
+#(後略)
 ```
 
-#### 各アクションが影響するインスタンス変数の確認ポイント
+```ruby
+#(前略)
+context 'flash[:alert]' do
+  subject { super(); flash[:alert] }
 
+  it { is_expected.to be_empty }
+end
+#(後略)
+```
+
+##### 各アクションが影響するインスタンス変数の確認
+
+
+```ruby
+#(前略)
+context '@domain' do
+  subject { super() ; assigns :domain }
+
+  it 'should eq found Domain' do
+    expect(subject).to eq domain
+  end
+  it 'should receive save! 1 time' do
+    subject
+    expect(domain).to have_received(:save!).with(no_args)
+  end
+end
+#(後略)
+```
+
+
+##### モデルや他のモジュールに対する呼び出しの確認
+
+
+Controllerは単体で動作するものはほとんど無く、モデルや他のモジュールと関連する
 
 ```
 【TBD】
 ```
 
-### StrongParameterの処理等、アクションメソッド以外についても意図した動作をしているか確認する（Concern含む）
+
+##### StrongParameterを使う場合のエラーケースの確認
 
 ```
+【TBD】
+```
+
+
+#### StrongParameter化のテスト
+
+
+StrongParameter化の処理等、アクションメソッド以外についても意図した動作をしているか確認する（Concern含む）
+
+```ruby
 context '#user_params' do
   let(:params) { {} }
   before do
@@ -334,7 +374,7 @@ index等の事前にデータを登録する必要があるものについては
 subject { get '/my' }
 ```
 
-確認ポイントとしては下記の通り
+ユーザ認証等がある場合はそのロール単位でcontextを切り、下記のポイントを確認する
 
 * partialも含め、意図したlayoutファイルが描画されているか
 * layoutファイルに条件分岐が含まれている場合は描画されていないこと
