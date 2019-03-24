@@ -19,9 +19,10 @@ Modelに対して必要なバリデータが設定されているか、必要な
 
 ### Controller Spec
 
-Controllerに対するユニットテストを記述する。
-各アクションメソッドやStrong Parameter化するメソッドを試験する。
-認証等`before_action`で実行しているものや、ControllerConcernでモジュール化されたものはstub化して試験を進めるものとし、確認ポイントはインスタンス変数やレスポンス、flashが意図したものになっているか、意図したエラーがraiseされているかなどとなる。
+Controllerに対し、各アクションメソッドやStrong Parameter化するメソッドを試験するユニットテストを記述する。
+
+認証等`before_action`で実行しているものや、ControllerConcernでモジュール化されたものはstub化して試験を進める。
+この事件での確認ポイントはインスタンス変数やレスポンス、flashが意図したものになっているか、意図したエラーがraiseされているかなどとなる。
 
 
 #### 各アクションメソッドのテスト
@@ -36,10 +37,10 @@ Controllerに対するユニットテストを記述する。
 
 テストを記述する際には下記のポイントをスタブ化する。
 
-* アクションメソッドがStrongParameterを呼び出している場合はそのStrongParameter化処理
+* アクションメソッドがStrongParameterを呼び出している場合はそのStrongParameter化しているメソッド
 * 認証やモデルを含む外部モジュールのメソッド呼び出し
 
-他のモジュールで`rescue_from`を行っている可能性を考慮し、`bypass_rescue`を必須とする。
+また、他のモジュールで`rescue_from`を行っている可能性を考慮し、`bypass_rescue`を必須とする。
 
 ```ruby
 #(前略)
@@ -152,8 +153,7 @@ end
 
 ##### モデルや他のモジュールに対する呼び出しの確認
 
-
-Controllerは単体で動作するものはほとんど無く、モデルや他のモジュールと関連する
+Controllerは単体で動作するものはほとんど無く、モデルや他のモジュールと関連するケースがほとんどであるため、モデルの呼び出しや他のモジュール呼び出しをスタブ化し、 `have_received` で引数を含めて確認する。特にモデルに対する操作では、モデルが`ActiveRecord::RecordNotFound`や`ActiveRecord::RecordInvalid`、`Mysql2::Error`がraiseされる点を考慮しておくこと。
 
 ```
 【TBD】
@@ -161,6 +161,8 @@ Controllerは単体で動作するものはほとんど無く、モデルや他�
 
 
 ##### StrongParameterを使う場合のエラーケースの確認
+
+StrongParameterを使う場合、StrongParameter化するメソッドが `ActionController::ParameterMissing` をraiseするケースがあるので、これについても試験を記述する。
 
 ```
 【TBD】
@@ -170,7 +172,7 @@ Controllerは単体で動作するものはほとんど無く、モデルや他�
 #### StrongParameter化のテスト
 
 
-StrongParameter化の処理等、アクションメソッド以外についても意図した動作をしているか確認する（Concern含む）
+StrongParameter化の処理については共通で利用することもあるため、まとめてテストを実施する。
 
 ```ruby
 context '#user_params' do
@@ -198,7 +200,8 @@ end
 * permitしているもの以外を含んだパラメータを指定した時、想定外のものが返り値から除外されている
 * メソッド内で`#extract!`等を実行している場合、想定どおりに返り値から除外されている
 
-また、各ControllerにはStrongParameterの確認メソッドと、アクションメソッド呼び出しの際に使用する小さなメソッドのみを記載する。viewからも利用するメソッドについてはHelperに、modelに関する操作はmodel（Concern含む）に書き、他の処理についてはControllerConcernにまとめて書き出すのが望ましい。
+
+> 各ControllerにはStrongParameterの確認メソッドと、アクションメソッド呼び出しの際に使用する小さなメソッドのみを記載する。viewからも利用するメソッドについてはHelperに、modelに関する操作はmodel（Concern含む）に書き、他の処理についてはControllerConcernにまとめて書き出すのが望ましい。
 
 
 ### View Spec
@@ -366,7 +369,7 @@ end
 
 HTTPメソッドとリクエストパス、パラメータ、ボディをinputとして、意図したviewを描画しているか、ステータスコードは意図したものになっているか確認するための試験。
 
-原則としてHTMLファイルを組み立てて描画する単体のリクエストをsubjectとする。
+
 またsubjectの指定はHTTPメソッドとリクエストパス、クエリパラメータを指定する形で行う。
 index等の事前にデータを登録する必要があるものについてはデータ登録をbeforeブロックで行う
 
