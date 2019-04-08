@@ -6,16 +6,83 @@ RSpecによる試験
 
 ### Model Spec
 
-Modelに対して必要なバリデータが設定されているか、必要なアトリビュートが意図した
-権限で設定されているか確認するための試験。
+Modelに対して必要なバリデータが設定されているか、必要なアトリビュートが意図した権限で設定されているか確認するための試験。
 
-メソッドを定義したりmoduleをincludeしている場合はそれらについても意図した動作を
-しているか確認する（Concern含む）
+メソッドを定義したりmoduleをincludeしている場合はそれらについても意図した動作をしているか確認する。
 
-【TBD】
+```ruby
+RSpec.describe Tenant, type: :model do
+  subject { FactoryBot.build :tenant }
 
-また、各Modelに共通する関数定義についてはModelConcernへまとめて書き出すのが
-望ましい。
+  it { is_expected.to have_many(:users).dependent(:destroy) }
+
+  context ':name' do
+    it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_length_of(:name).is_at_least(1).is_at_most(40) }
+    it { is_expected.to validate_uniqueness_of(:name) }
+    it { is_expected.not_to allow_value('').for(:name) }
+    it { is_expected.to allow_value('a').for(:name) }
+    it { is_expected.to allow_value('a' * 40).for(:name) }
+    it { is_expected.not_to allow_value('a' * 41).for(:name) }
+  end
+end
+```
+
+#### subject
+
+テスト対象のモデルは、FactoryBotを使って定義するものとし、値についてはFakerで動的に定義する
+
+```ruby
+FactoryBot.define do
+  sequence :tenant_name do
+    Faker::Company.name
+  end
+  
+  factory :tenant do
+    name { generate :tenant_name }
+  end
+end
+```
+```ruby
+RSpec.describe Tenant, type: :model do
+  subject { FactoryBot.build :tenant }
+
+```
+
+#### リレーション
+
+モデルとモデルの間にリレーションを定義している場合、それらについても試験を実施する
+
+```ruby
+  it { is_expected.to have_many(:users).dependent(:destroy) }
+```
+
+#### バリデーション
+
+バリデーションについて、正しくモデル側に定義されているか試験する
+
+```ruby
+  context ':name' do
+    it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_length_of(:name).is_at_least(1).is_at_most(40) }
+    it { is_expected.to validate_uniqueness_of(:name) }
+```
+
+#### 実際の値を用いた試験
+
+長さや内容等に対してバリデーションがかかっているか、値を入れて境界値試験を実施する
+
+```ruby
+    it { is_expected.not_to allow_value('').for(:name) }
+    it { is_expected.to allow_value('a').for(:name) }
+    it { is_expected.to allow_value('a' * 40).for(:name) }
+    it { is_expected.not_to allow_value('a' * 41).for(:name) }
+```
+
+#### after_save 等のコールバック
+
+コールバックを利用して他のアクションを実行している場合、それらが正しく動作するかも含めてテストを行う
+また、複数のModelに共通する関数定義についてはModelConcernへまとめて書き出すのが望ましい。
 
 ### Controller Spec
 
@@ -155,17 +222,44 @@ end
 
 Controllerは単体で動作するものはほとんど無く、モデルや他のモジュールと関連するケースがほとんどであるため、モデルの呼び出しや他のモジュール呼び出しをスタブ化し、 `have_received` で引数を含めて確認する。特にモデルに対する操作では、モデルが`ActiveRecord::RecordNotFound`や`ActiveRecord::RecordInvalid`、`Mysql2::Error`がraiseされる点を考慮しておくこと。
 
-```
-【TBD】
+```ruby
+        context 'User' do
+          it 'should receive new(user_param) 1 time' do
+            subject
+            expect(User).to have_received(:new).with(user_param).once
+          end
+        end
 ```
 
+```ruby
+          context 'raise ActiveRecord::RecordInvalid' do
+            before do
+              allow(user).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+            end
+```
+
+```ruby
+
+          context 'raise ActiveRecord::RecordNotFound' do
+            before do
+              allow(controller).to receive(:user_param).and_raise(ActiveRecord::RecordNotFound)
+            end
+
+            it { expect{subject}.to raise_error(ActiveRecord::RecordNotFound) }
+          end
+```
 
 ##### StrongParameterを使う場合のエラーケースの確認
 
 StrongParameterを使う場合、StrongParameter化するメソッドが `ActionController::ParameterMissing` をraiseするケースがあるので、これについても試験を記述する。
 
-```
-【TBD】
+```ruby
+          context 'raise ActionController::ParameterMissing' do
+            subject { super() ; response }
+
+            before do
+              allow(controller).to receive(:user_param).and_raise(ActionController::ParameterMissing.new({}))
+            end
 ```
 
 
@@ -348,7 +442,63 @@ end
 
 ### Helper Spec
 
-【TBD】
+helperで定義されている関数に対して試験を行う
+
+subjectは `helper.{関数名}` となる
+
+```
+RSpec.describe DeviseResourceHelper, type: :helper do
+  context '#resource_name' do
+    subject { helper.resource_name }
+
+    it { is_expected.to eq :user }
+  end
+
+  context '#resource' do
+    subject { helper.resource }
+
+    let(:user) { instance_double(User) }
+
+    context 'when @resource = nil' do
+      before { allow(User).to receive(:new).and_return(user) }
+
+      it "should eq new User's instance" do
+        expect(subject).to eq user
+      end
+    end
+
+    context 'when @resource = user' do
+      before { assign :resource, user }
+
+      it "should eq user" do
+        expect(subject).to eq user
+      end
+    end
+  end
+
+  context '#devise_mapping' do
+    subject { helper.devise_mapping }
+
+    let(:devise_mapping) { double }
+
+    context 'when @devise_mapping = nil' do
+      before { allow(Devise).to receive_message_chain(:mappings, :[]).and_return(devise_mapping) }
+
+      it "should eq new User's instance" do
+        expect(subject).to eq devise_mapping
+      end
+    end
+
+    context 'when @devise_mapping = devise_mapping' do
+      before { assign :devise_mapping, devise_mapping }
+
+      it "should eq devise_mapping" do
+        expect(subject).to eq devise_mapping
+      end
+    end
+  end
+end
+```
 
 
 ### Job Spec
